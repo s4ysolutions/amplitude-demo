@@ -1,0 +1,3 @@
+package solutions.s4y.amplitudedemo.analytics
+
+interface AnalyticsInterface
