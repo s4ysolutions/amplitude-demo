@@ -9,7 +9,10 @@ class TheApplication : Application() {
     }
 
     protected fun prepareAppComponent(): AppComponent {
-        return DaggerAppComponent.builder().build()
+        return DaggerAppComponent
+            .builder()
+            .daggerApplicationModule(DaggerApplicationModule(this))
+            .build()
     }
 
     override fun onCreate() {
