@@ -12,7 +12,9 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
+import solutions.s4y.amplitudedemo.analytics.AnalyticsInterface
 import solutions.s4y.amplitudedemo.dummy.DummyContent
+import javax.inject.Inject
 
 /**
  * An activity representing a list of Pings. This activity
@@ -23,6 +25,8 @@ import solutions.s4y.amplitudedemo.dummy.DummyContent
  * item details side-by-side using two vertical panes.
  */
 class ItemListActivity : AppCompatActivity() {
+    @Inject
+    lateinit var analytics: AnalyticsInterface
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -34,12 +38,14 @@ class ItemListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_list)
 
+        TheApplication.dagger.inject(this)
         setSupportActionBar(toolbar)
         toolbar.title = title
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+            analytics.eventFabClick()
         }
 
         if (item_detail_container != null) {
@@ -69,6 +75,7 @@ class ItemListActivity : AppCompatActivity() {
         init {
             onClickListener = View.OnClickListener { v ->
                 val item = v.tag as DummyContent.DummyItem
+                parentActivity.analytics.eventListItemSelect(item.id)
                 if (twoPane) {
                     val fragment = ItemDetailFragment().apply {
                         arguments = Bundle().apply {
